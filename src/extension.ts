@@ -20,7 +20,7 @@ async function callAzureOpenAI(prompt: string): Promise<string[]> {
         max_tokens: 50
     }, {
         headers: {
-            'Authorization': `f88fb7da4df24743a94ffc12ca49d287`,
+            'Authorization': `your secret key`,
             'Content-Type': 'application/json'
         }
     });
