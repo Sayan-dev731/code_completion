@@ -1,10 +1,57 @@
 {
-  "dependencies": {
-    "@azure/openai": "^2.0.0",
-    "axios": "^1.7.9",
-    "mem-fs": "^4.1.2"
+  "name": "code-helper",
+  "displayName": "Code Helper",
+  "description": "An AI-powered extension for code completion and workspace management.",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": ["onCommand:extension.activate"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.activate",
+        "title": "Activate Code Helper"
+      },
+      {
+        "command": "extension.askAI",
+        "title": "Ask AI"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Code Helper Settings",
+      "properties": {
+        "codeHelper.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Azure OpenAI API Key"
+        },
+        "codeHelper.endpoint": {
+          "type": "string",
+          "default": "",
+          "description": "Azure OpenAI Endpoint"
+        },
+        "codeHelper.deploymentId": {
+          "type": "string",
+          "default": "",
+          "description": "Azure OpenAI Deployment ID"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./"
   },
   "devDependencies": {
-    "@types/vscode": "^1.96.0"
+    "@types/vscode": "^1.75.0",
+    "typescript": "^4.8.4",
+    "vscode": "^1.75.0"
+  },
+  "dependencies": {
+    "@azure/openai": "^1.0.0"
   }
 }

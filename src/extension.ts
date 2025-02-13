@@ -1,31 +1,66 @@
 import * as vscode from 'vscode';
-import axios from 'axios';
+import { OpenAIClient, AzureKeyCredential } from '@azure/openai';
 
-export function activate(context: vscode.ExtensionContext) {
-    const provider: vscode.CompletionItemProvider = {
-        provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
-            const linePrefix = document.lineAt(position).text.substr(0, position.character);
-            return callAzureOpenAI(linePrefix).then(suggestions => {
-                return suggestions.map(suggestion => new vscode.CompletionItem(suggestion, vscode.CompletionItemKind.Text));
-            });
-        }
-    };
+let openAIClient: OpenAIClient | null = null;
 
-    context.subscriptions.push(vscode.languages.registerCompletionItemProvider('plaintext', provider));
+async function getCompletion(prompt: string): Promise<string> {
+    const config = vscode.workspace.getConfiguration('codeHelper');
+    const apiKey = config.get<string>('apiKey') || '';
+    const endpoint = config.get<string>('endpoint') || '';
+    const deploymentId = config.get<string>('deploymentId') || '';
+
+    if (!apiKey || !endpoint || !deploymentId) {
+        throw new Error('Please configure your Azure OpenAI settings in the extension settings.');
+    }
+
+    if (!openAIClient) {
+        openAIClient = new OpenAIClient(endpoint, new AzureKeyCredential(apiKey));
+    }
+
+    const result = await openAIClient.getCompletions(deploymentId, {
+        prompt,
+        max_tokens: 100,
+        temperature: 0.7,
+    });
+
+    return result.choices[0].text.trim();
 }
 
-async function callAzureOpenAI(prompt: string): Promise<string[]> {
-    const response = await axios.post('https://api.openai.azure.com/v1/engines/davinci-codex/completions', {
-        prompt: prompt,
-        max_tokens: 50
-    }, {
-        headers: {
-            'Authorization': `your secret key`,
-            'Content-Type': 'application/json'
+export function activate(context: vscode.ExtensionContext) {
+    console.log('Code Helper is now active!');
+
+    const askAICommand = vscode.commands.registerCommand('extension.askAI', async () => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+            vscode.window.showErrorMessage('No active editor found.');
+            return;
+        }
+
+        const selection = editor.selection;
+        const text = editor.document.getText(selection) || 'Write code for me';
+
+        try {
+            const completion = await getCompletion(text);
+            editor.edit(editBuilder => {
+                editBuilder.insert(selection.end, `\n${completion}`);
+            });
+        } catch (error) {
+            vscode.window.showErrorMessage(`Error: ${error.message}`);
         }
     });
 
-    return response.data.choices[0].text.split('\n').filter(line => line.trim() !== '');
+    const workspaceInfoCommand = vscode.commands.registerCommand('extension.showWorkspaceInfo', () => {
+        const folders = vscode.workspace.workspaceFolders;
+        if (folders) {
+            vscode.window.showInformationMessage(`Workspace Folders: ${folders.map(f => f.name).join(', ')}`);
+        } else {
+            vscode.window.showInformationMessage('No workspace folders open.');
+        }
+    });
+
+    context.subscriptions.push(askAICommand, workspaceInfoCommand);
 }
 
-export function deactivate() {}
+export function deactivate() {
+    console.log('Code Helper has been deactivated.');
+}
