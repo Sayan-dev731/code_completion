@@ -1,6 +1,6 @@
 # code-simulation README
 
-This is the README for your extension "code-simulation". After writing up a brief description, we recommend including the following sections.
+"code-simulation". After writing up a brief description, we recommend including the following sections.
 
 ## Features
 
