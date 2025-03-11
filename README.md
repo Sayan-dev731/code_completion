@@ -1,6 +1,6 @@
 # code-simulation README
 
-"code-simulation". After writing up a brief description, we recommend including the following sections. how about i contribute here!
+"code-simulation". After writa brief description, we recommend including the following sections. how about i contribute here!
 
 ## Features
 
