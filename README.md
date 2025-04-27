@@ -47,7 +47,7 @@ Fixed issue #.
 
 Added features X, Y, and Z.
 
----
+----
 
 ## Following extension guidelines
 
