@@ -1,95 +1,92 @@
-Phase 1: Handle Invalid IDs in the API
-The requirement is to return the specific text "No fruit with this id" when a user requests a non-existent ID.
 
-Open the Controller File:
+### **Phase 1: Generate and Run Unit Tests**
 
-In VS Code, navigate to the Controllers folder.
+You need to identify the testing framework and generate tests for your controller.
 
-Open FruitController.cs.
+1.  **Identify the Framework:**
 
-Locate the GET Method:
+      * Open your file explorer in VS Code.
+      * Look for a folder named `FruitStore.Tests` (or similar). Open the `.csproj` file inside it.
+      * Look for a package reference like `xunit`, `NUnit`, or `MSTest`.
+      * **Action:** Note the name of this framework (e.g., "xUnit") for the documentation step.
 
-Find the method that handles GET /api/fruit/{id}. It will likely look like public ActionResult Get(int id).
+2.  **Generate Controller Tests:**
 
-Use Copilot to Modify the Logic:
+      * Navigate to the **Test Project** folder.
+      * Create a new file named `FruitControllerTests.cs` (if it doesn't already exist).
+      * Open the file, press `Ctrl + I` (Windows) / `Cmd + I` (Mac) to open Copilot.
+      * Type the following prompt:
+        > "Generate valid unit tests for all methods in the FruitController class. Ensure the tests mock the data repository correctly."
+      * **Accept** the generated code.
 
-Highlight the entire Get method.
+3.  **Run the Tests:**
 
-Press Ctrl + I (Windows) or Cmd + I (Mac) to open the Copilot chat.
+      * Open the Terminal (`Ctrl + ~`).
+      * Type the following command to run the tests:
+        ```bash
+        dotnet test
+        ```
+      * **Action:** Verify that the tests pass, especially the one that enumerates all fruits.
 
-Enter the following prompt:
+-----
 
-"Modify this method so that if the fruit with the specified ID is not found, it returns a NotFound result with the exact plain text body: 'No fruit with this id'."
+### **Phase 2: Document in Contoso Data Editor**
 
-Verify the Code:
+Switch to the "Contoso Data Editor" application (this is likely a separate window or text box in your lab environment) and enter the following information as requested:
 
-Ensure the code looks similar to this:
+1.  **Unit Test Framework:**
 
-C#
+      * Type the name of the framework you found in Phase 1 (e.g., **xUnit** or **MSTest**).
 
-if (fruit == null)
-{
-    return NotFound("No fruit with this id");
-}
-Crucial: The text must match exactly as shown in the exhibit.
+2.  **Command Used:**
 
-Phase 2: Enable Adding Fruits (POST Method)
-You need to ensure the API supports adding fruits via a POST request, visible in Swagger.
+      * Type the command you used to run the validation:
+        ```bash
+        dotnet test
+        ```
 
-Check for an Existing POST Method:
+-----
 
-Still in FruitController.cs, look for a method decorated with [HttpPost].
+### **Phase 3: Clean, Commit, and Push**
 
-If it is missing or incomplete, place your cursor inside the class (but outside other methods).
+You must carefully commit your work while excluding specific files (`bin`, `obj`, and files starting with `.`).
 
-Generate the POST Method:
+1.  **Configure Exclusions (.gitignore):**
 
-Press Ctrl + I.
+      * Open (or create) the `.gitignore` file in the root directory.
+      * Ensure it contains the following lines. If not, ask Copilot: *"Update .gitignore to exclude bin, obj, and all files starting with a dot."*
+        ```text
+        bin/
+        obj/
+        .*
+        ```
+      * *Self-Correction:* The instruction specifically says to exclude files starting with `_` (underscore) or `.` (dot) depending on interpretation, but standard practice for "files that start with ." (like `.vscode`) is to put `.*` in gitignore. The image text says `files that start with "."`.
 
-Enter the prompt:
+2.  **Stage the Files:**
 
-"Add an HttpPost method to this controller that accepts a Fruit object and adds it to the data store. It should return the created fruit."
+      * In the terminal, run:
+        ```bash
+        git add .
+        ```
+      * *Tip:* You can run `git status` to verify that no `bin` or `obj` folders are being staged.
 
-Accept the Code:
+3.  **Commit with Detailed Message:**
 
-Copilot should generate a method like public ActionResult Post(Fruit fruit). Click Accept.
+      * The instructions require the commit message to list files and their purpose. Run a command similar to this (adjusting filenames based on what you actually changed):
+        ```bash
+        git commit -m "Updated project files. FruitController.cs: Added API logic. FruitControllerTests.cs: Added unit tests. Readme.md: Added documentation."
+        ```
 
-Phase 3: Add Controller Documentation
-The instructions explicitly state to add a description of functionality and usage details to the top of the file.
+4.  **Push to GitHub:**
 
-Go to the Top of the File:
+      * Run the final command:
+        ```bash
+        git push
+        ```
 
-Scroll to the very top of FruitController.cs, just above the class definition (public class FruitController ...).
+### **Summary Checklist**
 
-Generate Documentation:
-
-Press Ctrl + I.
-
-Enter the prompt:
-
-"Add a summary comment describing the functionality and usage of this controller."
-
-Accept:
-
-Copilot will insert a generic description (e.g., "API Controller for managing a list of fruits..."). Click Accept.
-
-Phase 4: Run and Verify
-Launch the Application:
-
-Open the terminal (Ctrl + ~) and run dotnet watch or dotnet run.
-
-Wait for the browser to open (usually to localhost:5112).
-
-Test the Invalid ID:
-
-In the browser address bar, type: http://localhost:5112/api/fruit/99 (or any random ID).
-
-Verify: The page should display the plain text: "No fruit with this id".
-
-Test Swagger:
-
-Navigate to http://localhost:5112/swagger (or wherever your Swagger UI is hosted).
-
-Verify: You should see a green POST button for /api/Fruit.
-
-Click POST -> Try it out, enter some sample JSON for a fruit, and click Execute to ensure it works.
+  * [ ] Did the `dotnet test` command pass?
+  * [ ] Did you write "xUnit" (or correct framework) and "dotnet test" in the Contoso Data Editor?
+  * [ ] Did you verify `bin` and `obj` folders were NOT committed?
+  * [ ] Did your commit message list the files and their purposes?
