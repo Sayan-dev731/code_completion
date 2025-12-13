@@ -1,62 +1,95 @@
-Phase 2: Update the Product Page (Product.razor)
-The goal is to ensure that clicking a fruit takes you to a details page that looks like the exhibit and uses the same data fetching method as the Home page.
+Phase 1: Handle Invalid IDs in the API
+The requirement is to return the specific text "No fruit with this id" when a user requests a non-existent ID.
 
-Open the File:
+Open the Controller File:
 
-Open Product.razor (likely in Components > Pages).
+In VS Code, navigate to the Controllers folder.
 
-Define the Route:
+Open FruitController.cs.
 
-Ensure the top of the file has the correct route to match the URL shown in the image (localhost:5112/fruit/4).
+Locate the GET Method:
 
-Add this directive at the top if it's missing:
+Find the method that handles GET /api/fruit/{id}. It will likely look like public ActionResult Get(int id).
 
-C#
+Use Copilot to Modify the Logic:
 
-@page "/fruit/{Id:int}"
-Use Copilot to Generate the Logic:
+Highlight the entire Get method.
 
-Highlight the code block (or the whole file) and press Ctrl + I.
+Press Ctrl + I (Windows) or Cmd + I (Mac) to open the Copilot chat.
 
-Type the following prompt to ensure strict adherence to the requirements:
+Enter the following prompt:
 
-"Implement this page to display details for a specific fruit (Name, Description, Price, Stock, Origin). It must retrieve data using the same service mechanism used in Home.razor. Match the layout shown in the 'Pear' exhibit."
+"Modify this method so that if the fruit with the specified ID is not found, it returns a NotFound result with the exact plain text body: 'No fruit with this id'."
 
 Verify the Code:
 
-Data Injection: Check that it injects the same service (e.g., @inject FruitService Service or similar).
+Ensure the code looks similar to this:
 
-Parameters: Ensure it has a [Parameter] public int Id { get; set; }.
+C#
 
-Display: Ensure the HTML displays:
+if (fruit == null)
+{
+    return NotFound("No fruit with this id");
+}
+Crucial: The text must match exactly as shown in the exhibit.
 
-Name (Large header)
+Phase 2: Enable Adding Fruits (POST Method)
+You need to ensure the API supports adding fruits via a POST request, visible in Swagger.
 
-Description (Paragraph)
+Check for an Existing POST Method:
 
-Price (e.g., "Price: 1.29")
+Still in FruitController.cs, look for a method decorated with [HttpPost].
 
-Stock (e.g., "Stock: True")
+If it is missing or incomplete, place your cursor inside the class (but outside other methods).
 
-Origin (e.g., "Origin: France")
+Generate the POST Method:
 
-Accept the changes.
+Press Ctrl + I.
 
-Phase 3: Run and Verify
-Run the App:
+Enter the prompt:
 
-Open your terminal in VS Code (Ctrl + ~).
+"Add an HttpPost method to this controller that accepts a Fruit object and adds it to the data store. It should return the created fruit."
 
-Type dotnet watch or dotnet run and press Enter.
+Accept the Code:
 
-Check Home Page:
+Copilot should generate a method like public ActionResult Post(Fruit fruit). Click Accept.
 
-Scroll down the list of fruits. You should see more items than before (the "additional 10").
+Phase 3: Add Controller Documentation
+The instructions explicitly state to add a description of functionality and usage details to the top of the file.
 
-Check Product Page:
+Go to the Top of the File:
 
-Click on any fruit (e.g., "Pear").
+Scroll to the very top of FruitController.cs, just above the class definition (public class FruitController ...).
 
-Verify the URL changes to /fruit/X.
+Generate Documentation:
 
-Verify the details (Price, Stock, Origin) are visible as shown in the screenshots.
+Press Ctrl + I.
+
+Enter the prompt:
+
+"Add a summary comment describing the functionality and usage of this controller."
+
+Accept:
+
+Copilot will insert a generic description (e.g., "API Controller for managing a list of fruits..."). Click Accept.
+
+Phase 4: Run and Verify
+Launch the Application:
+
+Open the terminal (Ctrl + ~) and run dotnet watch or dotnet run.
+
+Wait for the browser to open (usually to localhost:5112).
+
+Test the Invalid ID:
+
+In the browser address bar, type: http://localhost:5112/api/fruit/99 (or any random ID).
+
+Verify: The page should display the plain text: "No fruit with this id".
+
+Test Swagger:
+
+Navigate to http://localhost:5112/swagger (or wherever your Swagger UI is hosted).
+
+Verify: You should see a green POST button for /api/Fruit.
+
+Click POST -> Try it out, enter some sample JSON for a fruit, and click Execute to ensure it works.
