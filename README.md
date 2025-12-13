@@ -1,72 +1,62 @@
-# code-simulation README
+Phase 2: Update the Product Page (Product.razor)
+The goal is to ensure that clicking a fruit takes you to a details page that looks like the exhibit and uses the same data fetching method as the Home page.
 
-"code-simulation".  we recommend including the following sections.
+Open the File:
 
-## Features
+Open Product.razor (likely in Components > Pages).
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+Define the Route:
 
-For example if there is an image subfolder under your extension project workspace:
+Ensure the top of the file has the correct route to match the URL shown in the image (localhost:5112/fruit/4).
 
-\!\[feature X\]\(images/feature-x.png\)
+Add this directive at the top if it's missing:
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+C#
 
-## Requirements
+@page "/fruit/{Id:int}"
+Use Copilot to Generate the Logic:
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+Highlight the code block (or the whole file) and press Ctrl + I.
 
-## Extension Settings
+Type the following prompt to ensure strict adherence to the requirements:
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+"Implement this page to display details for a specific fruit (Name, Description, Price, Stock, Origin). It must retrieve data using the same service mechanism used in Home.razor. Match the layout shown in the 'Pear' exhibit."
 
-For example:
+Verify the Code:
 
-This extension contributes the following settings:
+Data Injection: Check that it injects the same service (e.g., @inject FruitService Service or similar).
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+Parameters: Ensure it has a [Parameter] public int Id { get; set; }.
 
-## Known Issues
+Display: Ensure the HTML displays:
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+Name (Large header)
 
-## Release Notes
+Description (Paragraph)
 
-Users appreciate release notes as you update your extension.
+Price (e.g., "Price: 1.29")
 
-### 1.0.0
+Stock (e.g., "Stock: True")
 
-Initial release of ...
+Origin (e.g., "Origin: France")
 
-### 1.0.1
+Accept the changes.
 
-Fixed issue #.
+Phase 3: Run and Verify
+Run the App:
 
-### 1.1.0
+Open your terminal in VS Code (Ctrl + ~).
 
-Added features X, Y, and Z.
+Type dotnet watch or dotnet run and press Enter.
 
-----
+Check Home Page:
 
-## Following extension guidelines
+Scroll down the list of fruits. You should see more items than before (the "additional 10").
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+Check Product Page:
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+Click on any fruit (e.g., "Pear").
 
-## Working with Markdown
+Verify the URL changes to /fruit/X.
 
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
-repository for maintaining all the pics posted to a website
+Verify the details (Price, Stock, Origin) are visible as shown in the screenshots.
